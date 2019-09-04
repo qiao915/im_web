@@ -1,0 +1,34 @@
+/* 修改element-ui 框架样式 */
+.el-tabs__item.is-top{color: #fff;}
+.el-dialog__header{padding: 10px 20px;background: #545c64;}
+.tableBox_top .keywords .el-tabs__content{width: 950px;height: 660px;overflow: auto;}
+.el-table td, .el-table th{padding: 6px 0;}
+.el-radio__input.is-checked+.el-radio__label{color: #67c23a;}
+.el-radio__input.is-checked .el-radio__inner{background: #67c23a;border:#67c23a;}
+.el-tabs__item.is-active{color: #3ead38;}
+.el-tabs__active-bar{background-color: #3ead38;}
+.el-tabs__item:hover{color: #3ead38;}
+.el-button--success{background-color: #08A406;border-color: #08A406;}
+.groupBox .el-tabs__header,.editTags .el-tabs__header{padding-left: 15px;}
+.groupBox .el-tabs__header .el-tabs__item{color: #333;}
+.tencentBox .el-tabs__header .el-tabs__item.is-active{color: #3ead38;}
+.tencentBox .el-tabs__item.is-top{color: #333;}
+
+.propBox .step_box .el-tabs__header .el-tabs__item.is-active{color: #3ead38;}
+.propBox .step_box .el-tabs__item.is-top{color: #333;}
+/* table */
+.el-tooltip__popper.is-light{background: #b2e281;border-radius: 5px;border:1px solid #fff;max-width: 350px;min-width: 100px;font-size: 14px;color: #333;}
+.pagination{margin-top: 20px;text-align: center;}
+
+/* 上传 */
+.upfloadCon .avatar-uploader .el-upload {border: 1px dashed #d9d9d9;border-radius: 6px;cursor: pointer;position: relative;overflow: hidden;}
+.upfloadCon  .avatar-uploader .el-upload:hover {border-color: #409EFF;}
+.upfloadCon  .avatar-uploader-icon {font-size: 28px;color: #8c939d;width: 80px;height: 80px;line-height: 80px;text-align: center;}
+.upfloadCon .avatar {width: 80px;height: 80px;display: block;}
+
+/* 聊天输入框 素材 折叠面板 */
+.chatInput .el-collapse-item__content {padding-bottom: 0;}
+.editTags .el-tabs__item.is-top{color: #000;}
+/*  */
+.message .inviteDialog .el-dialog--center .el-dialog__footer{background-color: #f1f1f1;padding: 55px 0 20px 0}
+.message .inviteDialog .el-button--success{width: 250px;height: 50px;font-size: 20px;}

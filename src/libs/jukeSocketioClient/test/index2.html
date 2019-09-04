@@ -1,0 +1,64 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>The HTML5 Herald</title>
+    <meta name="description" content="The HTML5 Herald">
+    <meta name="author" content="SitePoint">
+
+    <style>
+        .button-line {
+            padding: 10px 0;
+        }
+
+        .button-line button { margin: 0 5px; }
+
+        .content {
+            width: 800px;
+            float: left;
+        }
+
+        .content .content-left, .content .content-right {
+            box-sizing: border-box;
+            width: 390px;
+            float: left;
+            border: 1px solid #cacaca;
+            border-radius: 5px;
+            padding: 10px;
+            height: 400px;
+            overflow-y: auto;
+        }
+        .content .content-right {
+            margin-left: 20px;
+        }
+
+        .content #show-content {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div>Hello, World</div>
+    <div class="content">
+        <div class="content-left">
+            <pre id="show-content"></pre>
+        </div>
+        <div class="content-right"></div>
+    </div>
+    <div style="clear: both"></div>
+    <div class="button-line">
+        <button id="connect-button" >Connect</button>
+        <button id="add-connect-button" >Add Connection</button>
+        <button id="button1" >Click</button>
+        <button id="login-button" >login</button>
+    </div>
+    <div class="button-line"></div>
+    <script src="./socket.io.js"></script>
+    <script src="./util.js"></script>
+    <script src="../dist/juke-socket-io-client.js"></script>
+    
+</body>
+</html>

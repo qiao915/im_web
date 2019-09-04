@@ -1,0 +1,13 @@
+{
+    "extEnable": true,
+    "extAppid": "wx6870fdb367bb0c5b",
+    "directCommit": false,
+    "ext": {
+		"edition":"customer",
+		"appIds":"5b400836-3142-4f26-9fae-fe921a64366d",
+		"wechatName":"快推智能名片测试2",
+		"logoUrl":"http://wx.qlogo.cn/mmopen/OM4v0FU2h0sQQ83Uthv518e0dYRuoDxWnnfKGWwmLvsVPFrGWm5zBsJVbaJfA887GyuEmhVZffVJj4J2sByxicxZcHpXl6avk/0",
+		"wechatAppId":"wx6870fdb367bb0c5b"
+
+    }
+}

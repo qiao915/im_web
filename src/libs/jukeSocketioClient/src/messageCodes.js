@@ -1,0 +1,9 @@
+// juke 数据包的 message code
+export const CommonResponse = 9999
+export const HeartBeatRequest = 1000
+export const LoginRequest = 2000
+export const LoginResult = 2001
+export const ForcedLogon = 2002
+export const ChatInfoRequest = 3000
+export const ErrorChatInfoResponse = 3001
+export const FileUrl = 3041

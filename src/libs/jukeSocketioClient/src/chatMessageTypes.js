@@ -1,0 +1,16 @@
+export const MSG_TXT = 1 // 文本
+export const MSG_PHOTO = 3 // 图片
+export const MSG_VOICE = 34 // 语音
+export const MSG_VIDEO = 43 // 视频
+export const MSG_WX_CARD = 42 // 微信名片
+export const MSG_FACE = 47 // 图片表情
+export const MSG_LOCATION = 48 // 定位
+export const MSG_SHARE = 49 // 分享
+export const MSG_VIDEO_CHAT = 50 // 视频聊天
+export const MSG_MATERIAL = 490 // 素材
+export const MSG_COUPON = 491 // 优惠券
+export const MSG_ACTIVE = 492 // 活动
+export const MSG_PERSONAL_CARD = 493 // 导购名片
+export const MSG_PROGRAM = 494 // 小程序
+export const MSG_SYSTEM = 10000 // 系统信息
+export const MSG_RED_PACKET = 436207665 // 红包

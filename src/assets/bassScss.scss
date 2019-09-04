@@ -1,0 +1,330 @@
+@mixin clear{
+  width: 0;
+  height: 0;
+  display: block;
+  content: "";
+  overflow: hidden;
+  clear: both;
+}
+
+@mixin afterClear{
+  &:after{
+    @include clear;
+  }
+}
+
+@mixin flexbox{
+  display: -webkit-flex;
+  display: flex;
+}
+
+@mixin flexboxChild($x:1){
+  -webkit-flex: $x;
+  flex: $x;
+  //兼容布局，为了不被撑开
+  width: 1px;
+}
+
+@mixin removeFlexboxChild(){
+  -webkit-flex: none;
+  flex: none;
+}
+
+@mixin flexboxCenter{
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: flex;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  -ms-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  -moz-justify-content: center;
+  -ms-justify-content: center;
+  justify-content: center;
+}
+
+@mixin oneLine{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@mixin removeOneLine{
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+}
+
+
+@mixin moreLine($x:1){
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $x;
+  -webkit-box-orient: vertical;
+}
+
+@mixin cantSelect{
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@mixin transition($name,$time:0.5s){
+  -webkit-transition: $name $time;
+  -moz-transition: $name $time;
+  -ms-transition: $name $time;
+  -o-transition: $name $time;
+  transition: $name $time;
+}
+
+@mixin border-radius($degree){
+  -webkit-border-radius: $degree;
+  -moz-border-radius: $degree;
+  -ms-border-radius: $degree;
+  -o-border-radius: $degree;
+  border-radius: $degree;
+}
+
+
+@mixin box-shadow($color,$horizontal,$vertical,$ambiguity){
+  -webkit-box-shadow: $color $horizontal $vertical $ambiguity;
+  -moz-box-shadow: $color $horizontal $vertical $ambiguity;
+  -ms-box-shadow: $color $horizontal $vertical $ambiguity;
+  -o-box-shadow: $color $horizontal $vertical $ambiguity;
+  box-shadow: $color $horizontal $vertical $ambiguity;
+}
+
+//关闭按钮
+@mixin closeBut($fontsize:14px){
+  text-align: center;
+  cursor: pointer;
+
+  &:after{
+    font-family: 'iconfont';
+    content: "\e6cc";
+    font-size: $fontsize;
+  }
+}
+
+//hover title
+@mixin hoverTitle($width:100px,$top:100%,$right:auto,$buttom:auto,$left:100%){
+  .KDA_hover_title{
+    width: $width;
+    height: 20px;
+    position: absolute;
+    left:$left;
+    right: $right;
+    top: $top;
+    bottom: $buttom;
+    background-color: #fff;
+    color: $fontDefineColor;
+    font-size: 12px;
+    border-radius: 4px;
+    line-height:20px;
+    padding: 0 10px;
+    display: none;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    z-index: 9;
+  }
+
+  &:hover{
+      .KDA_hover_title{
+        display: block;
+      }
+  }
+}
+
+@mixin defineImg($url:"https://cdn-img-oss-test.kuick.cn/user/header/88aff904-4597-4aa3-a87c-374e8813541d.jpg?x-oss-process=image/resize,m_fill,h_100,w_100"){
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url($url);
+    background-size: cover;
+  }
+}
+
+
+@mixin KDA_loading_after($size:40px, $color:#707070){
+
+  &:after{
+    width:$size;
+    height: $size;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: - $size/2;
+    margin-left: - $size/2;
+    text-align: center;
+    line-height: $size;
+    @include iconfont("\e6d0");
+    font-size: $size - 2px;
+    color: $color;
+    animation: run360 1s linear infinite;
+  }
+
+}
+
+@mixin KDA_loading_before($size:40px, $color:#707070){
+
+  &:before{
+    width:$size;
+    height: $size;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: - $size/2;
+    margin-left: - $size/2;
+    text-align: center;
+    line-height: $size;
+    @include iconfont("\e6d0");
+    font-size: $size - 2px;
+    color: $color;
+    animation: run360 1s linear infinite;
+  }
+
+}
+
+
+
+//滚动条的设置
+@mixin setScroll($width:4px, $bgColor:rgba(255,255,255,0), $scorllColor:#ddd, $right:0px){
+  //轨道
+  &::-webkit-scrollbar{
+    width:$width;
+    height: $width;
+    right: $right;
+    background-color: $bgColor;
+  }
+  //滑块
+  &::-webkit-scrollbar-thumb {
+    background-color: $scorllColor;
+    border-radius: 100px;
+  }
+}
+
+@mixin setPlaceholderColor($color_a:#ccc){
+  &::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+     color: $color_a;
+  }
+  &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+     color: $color_a;
+  }
+  &::-moz-placeholder { /* Mozilla Firefox 19+ */
+     color: $color_a;
+  }
+  &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+     color: $color_a;
+  }
+}
+
+//函数，传入个数，返回百分比
+@function getPercent($num) {
+  @return 100 / $num * 1%;
+}
+
+
+@mixin iconfont($content){
+  content: $content;
+  font-family: "iconfont";
+}
+
+// 文字强制换行（尤其适用于中文英文数字混合的时候）
+@mixin wordBreak() {
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+// 向左的小箭头
+@mixin leftArrow($border:10px, $borderColor:#ccc, $top:50%) {
+  &::before {
+    width: 0;
+    height: 0;
+    content: "";
+    display: block;
+    border: $border solid transparent;
+    border-right-color: $borderColor;
+    position: absolute;
+    top: $top;
+    left: -($border*2);
+    margin-top: -$border;
+  }
+  &::after {
+    width: 0;
+    height: 0;
+    content: "";
+    display: block;
+    border: $border solid transparent;
+    border-right-color: #fff;
+    position: absolute;
+    top: $top;
+    left: -($border*2-1);
+    margin-top: -$border;
+  }
+}
+
+// 向上的小箭头
+@mixin topArrow($border:10px, $borderColor:#ccc, $left:50%) {
+  &::before {
+    width: 0;
+    height: 0;
+    content: "";
+    display: block;
+    border: $border solid transparent;
+    border-bottom-color: $borderColor;
+    position: absolute;
+    left: $left;
+    top: -($border*2);
+    margin-left: -$border;
+  }
+  &::after {
+    width: 0;
+    height: 0;
+    content: "";
+    display: block;
+    border: $border solid transparent;
+    border-bottom-color: #fff;
+    position: absolute;
+    left: $left;
+    top: -($border*2-1);
+    margin-left: -$border;
+  }
+}
+
+//字体默认样式
+$fontDefineColor:#707070;
+//边框的颜色，
+$borderColor:#cccccc;
+//input输入框的高度，单行
+$inputHeight:35px;
+//输入框，单选按钮，多选按钮，激活颜色
+$inputActive:#1bb1a1;
+//输入框阴影
+$inputShaowColor:rgba(16,208,229, 0.5);
+//未读消息颜色
+$unreadColor:#E8425C;
+//小字颜色（灰）
+$subTextColor:#999;
+//列表的分割线颜色
+$listBorderColor:#eeeeee;
+//customer 记录色值及名称
+$customerRecordColor: (quick_record:#54ddcd, attend:#feb1c3, visit:#fab7a6, deal:#a8d5f6);
+//customer 客户动态到的数据 name,color,icon
+$customerDynamicColorAndIcon:(data_send #f9b6a5 "\e65c") (data_visit #55dccb "\e647")(fill_from #ffb0c3 "\e65d")(web_visit #cebeef "\e64f")( app_start #a8d5f4 "\e64d")( call_record #87e1ec "\e651")( remote_demonstration #e2a8f4 "\e64c")( weixin_follow #1cb0a0 "\e6ec")( cancel_weixin_follow #1cb0a0 "\e6ec");
+
+
+//内容可能的背景颜色
+$contentBgColor:#f0f6f7;
+// 深色字
+$deepFontColor:#404040;

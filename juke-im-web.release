@@ -1,0 +1,22 @@
+# 请参考 https://help.aliyun.com/document_detail/59293.html 了解更多关于release文件的编写方式 
+
+# 构建源码语言类型
+code.language=node6.x
+
+# 构建命令
+build.command=release/docker/build.sh
+
+# 构建打包使用的打包文件
+build.output=dist
+
+# 应用部署脚本
+deploy.appctl.path=release/docker/deploy.sh
+
+# Dockerfile
+docker.file=Dockerfile
+
+# Docker镜像构建之后push的仓库地址
+docker.repo=registry.cn-hangzhou.aliyuncs.com/juke/juke-im-web
+
+# Docker Tag
+docker.tag=1.0.0-${TIMESTAMP}

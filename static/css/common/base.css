@@ -1,0 +1,46 @@
+/*自定义滚动条*/
+::-webkit-scrollbar { width: 5px;height: 5px;-webkit-border-radius: 40%;}
+::-webkit-scrollbar-thumb {background: #c3c3c3; -webkit-border-radius: 4px;}
+
+.top-f0{border-top:1px solid #f0f0f0;}
+.bottom-f0{border-bottom:1px solid  #f0f0f0;}
+.cf::after{
+  clear: both;
+  overflow: hidden;
+  content: ".";
+  height: 0;
+  visibility: hidden;
+  display: block;
+}
+.cor-po{cursor: pointer;}
+.fl-r{float: right;}
+.fl-l{float: left;}
+.fs-12{font-size: 12px}
+.fs-14{font-size: 14px}
+.fs-16{font-size: 16px}
+.fs-18{font-size: 18px}
+.fs-20{font-size: 20px}
+.fs-24{font-size: 24px}
+.fs-30{font-size: 25px}
+.fs-36{font-size: 36px}
+.fs-38{font-size: 38px}
+.ml-10{margin-left: 10px}
+.mr-10{margin-right: 10px}
+.mt-10{margin-top: 10px;}
+.mb-10{margin-bottom: 10px;}
+.ml-20{margin-left: 20px}
+.mr-20{margin-right: 20px}
+.mt-20{margin-top: 20px;}
+
+.ml-20{margin-left: 20px;}
+.mr-20{margin-right: 20px}
+
+
+.mb-20{margin-bottom: 20px;}
+.ta-l{text-align: left;}
+.ta-c{text-align: center;}
+.ta-r{text-align: right;}
+
+.posi-re{position: relative;}
+.posi-ab{position: absolute;}
+.posi-fi{position: fixed;}
