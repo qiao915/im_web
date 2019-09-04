@@ -44,7 +44,6 @@ service.loginSuccess = async function (self, userInfo,token) {
   let allDevices = []
   let urlParams = local_storage.get('urlParams')
 
-  // 请求导购的设备终端
   let salesDevices = await self.$http({
     type: 'post',
     url: '/api/imh5/friendsjob/findShopTerminalList.do',
@@ -55,12 +54,11 @@ service.loginSuccess = async function (self, userInfo,token) {
     }
   })
 
-
   if (salesDevices.data.result) {
     let data = salesDevices.data.returnObject
     // console.log(data)
     //存储店铺信息
-    data.forEach((item, index)=>{
+    data.forEach((item, index) => {
       if (urlParams && urlParams.wxId == item.noWx) {
         self.$store.commit(NOW_SELECT_GUIDE, data[index])
       } else {
@@ -108,7 +106,6 @@ service.loginSuccess = async function (self, userInfo,token) {
   //     }
   //   }
   // }
-
 
   let serviceInfo = {}
 

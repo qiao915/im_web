@@ -276,6 +276,33 @@
             </div>
 
 
+          <!-- type== 496  邀请进群-->
+            <div v-if="item.type == 496">
+            <!-- <div> -->
+              <div class="main" :class="{ self: item.senderFlag == 1  ? 'self' : '' }">
+                <img
+                  class="avatar"
+                  width="36"
+                  height="36"
+                  :src="createMessageAvatar(item)"
+                >
+                <div
+                  class="mapContent activityBox"
+                  @click.prevent="invitedJion(item)"
+                >
+                  <a >
+                    <!-- <p style="padding-left:10px;" v-html="setDeseContent(item.shareTitle)">邀请你加入群聊</p> -->
+                    <p style="padding-left:10px;" v-html="xmlSet(item.shareTitle)"></p>
+                    <div class="activityContent">
+                      <!-- <p v-html="setDeseContent(item.shareDes)">“{{item.memberName}}”邀请你加入群聊，{{item.shareDes}}进入可查看详情。</p> -->
+                      <p v-html="xmlSet(item.shareDes)"></p>
+                      <img :src="xmlSet(item.resourcesPath)" alt>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+
           </div>
         </li>
 
@@ -303,13 +330,13 @@
   <!-- 邀请进群 -->
   <el-dialog class="inviteDialog" title="邀请进群" :visible.sync="inviteGroup" center width="480px" @close="inviteGroup = false">
     <div class="inviteBox">
-      <img src="../../../static/img/default-user.png" alt="">
-      <p class="groupName">撩骚群</p>
-      <p class="gMNum">90人</p>
+      <img :src="xmlSet(inviteGroupData.resourcesPath)" alt="">
+      <p class="groupName" v-html="xmlSetGroupName(inviteGroupData.shareDes)">撩骚群</p>
+      <!-- <p class="gMNum">90人</p> -->
     </div>
     <span slot="footer">
-        <p class="dialog-footer">吴晶晶邀请你加入群聊</p>
-        <el-button type="success" size="medium" @click="inviteGroup = false">加入群聊</el-button>
+        <p class="dialog-footer"  v-html="xmlSet(inviteGroupData.shareTitle)"></p>
+        <el-button type="success" size="medium" @click="inviteGroupHadel">加入群聊</el-button>
     </span>
   </el-dialog>
 
@@ -339,7 +366,6 @@ export default {
   components: {
     AudioWeixin
   },
-
   props: {
     type: {
       type: Number,
@@ -363,7 +389,6 @@ export default {
     // }
 
   },
-
   data () {
     return {
       mapList: {},
@@ -397,11 +422,11 @@ export default {
       countTime: 6,
       groupMemberNum: 0,
       chatFlag: this.$route.params.hasOwnProperty('chatRoomName'),
-      inviteGroup: true,
+      inviteGroup: false,
+      inviteGroupData:{},
 
     }
   },
-
   filters: {
     time (time) {
       const d1 = new Date(time)
@@ -434,7 +459,6 @@ export default {
     },
 
   },
-
   computed: {
     ...mapGetters([
       'sendMessage',
@@ -488,7 +512,6 @@ export default {
     }
 
   },
-
   watch: {
     async currentPersonMemberCode (newVal, oldVal) {
       if (!newVal || newVal === oldVal || this.type === chatWindowType.history) {
@@ -502,7 +525,6 @@ export default {
       this.getGroupMemberNum()
     },
   },
-
   async created () {
 
     if (this.type === chatWindowType.history) {
@@ -514,7 +536,6 @@ export default {
     }
 
   },
-
   mounted () {
     this.getGroupMemberNum()
     document.removeEventListener('click', this.docClick.bind(this), false)
@@ -558,10 +579,44 @@ export default {
 
     this.copyMessage()
   },
-
   methods: {
-
-
+	  inviteGroupHadel () {
+		  this.$http({
+			  type : 'post',
+			  url : 'api/im/chatroom/inviteAddGroup.do',
+			  params : {
+                  code:this.inviteGroupData.code,
+				  noWxGm: this.inviteGroupData.noWxGm,
+				  content:this.inviteGroupData.content
+			  }
+		  }).then(res=>{
+			  if(res.data.result == true){
+				  this.$message({
+					  type: 'success',
+					  message: '加入群聊成功'
+				  })
+			  }else{
+				  this.$message({
+					  type: 'error',
+					  message: res.data.errorMessage
+				  })
+              }
+			  this.inviteGroupData = {};
+			  setTimeout(()=>{this.inviteGroup = false},500)
+		  })
+      },
+    invitedJion(item){
+      this.inviteGroup = true;
+      this.inviteGroupData = item;
+    },
+    xmlSetGroupName(value){
+          if(value) return value.split("加入群聊")[1].split("，进入可查看详情")[0];
+    },
+    //xml 处理
+    xmlSet(value){
+      value = "" + value;
+      return value.replace("<![CDATA[","").replace("]]>","");
+    },
     ...mapActions([
       'initPersonMemberMessages',
       'appendOldPersonMemberMessages',
