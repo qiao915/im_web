@@ -601,8 +601,7 @@ export default {
 					  message: res.data.errorMessage
 				  })
               }
-			  this.inviteGroupData = {};
-			  setTimeout(()=>{this.inviteGroup = false},500)
+			  setTimeout(()=>{this.inviteGroup = false;this.inviteGroupData = {}},500)
 		  })
       },
     invitedJion(item){

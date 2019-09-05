@@ -8,16 +8,16 @@ module.exports = {
 		assetsSubDirectory: 'static',
 		assetsPublicPath: '/im-web/',
 		//assetsPublicPath: './',
-		productionSourceMap: false,
-		productionDebugger: false,
-		productionConsole: false,
+		productionSourceMap: process.env.NODE_ENV !== 'production',  //去除map文件
+		productionDebugger: process.env.NODE_ENV !== 'production',   //去除 debugger
+		productionConsole: process.env.NODE_ENV !== 'production',    //去除 console
+
 		productionGzip: false,
 		productionGzipExtensions: ['js', 'css'],
 		bundleAnalyzerReport: process.env.npm_config_report
 	},
 	dev: {
 		env: require('./dev.env'),
-		host: '192.168.0.188',
 		port: 8080,
 		autoOpenBrowser: true,
 		assetsSubDirectory: 'static',
