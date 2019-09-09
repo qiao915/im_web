@@ -56,7 +56,7 @@ export default {
   },
   methods:{
     circleFriends(index){
-
+    // this.$router.go(-1)
       if(index ==1){
         //朋友圈动态
         let params = this.$route.params;

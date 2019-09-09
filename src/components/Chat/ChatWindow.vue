@@ -116,7 +116,6 @@
                 </div>
               </div>
             </div>
-
             <!--文件-->
             <div v-if="item.type == 495">
               <div class="main" :class="{ self: item.senderFlag == 1 ? 'self' : '' }">
@@ -274,8 +273,6 @@
                 </div>
               </div>
             </div>
-
-
           <!-- type== 496  邀请进群-->
             <div v-if="item.type == 496">
             <!-- <div> -->
@@ -302,11 +299,8 @@
                 </div>
               </div>
             </div>
-
           </div>
         </li>
-
-
       </ul>
     </div>
     <div class="featureBox" v-if="showFeature" ref="featureBox">
@@ -314,9 +308,9 @@
         <li v-if="rightContextData.showCopyButton" id="copyIdComp" :data-clipboard-text="withdrawMessageArr.content">复制</li>
         <li v-if="rightContextData.showWithdrawButton" @click="withdrawMessage()">撤回</li>
         <li v-if="rightContextData.showTransferButton" @click="transpond()">转发</li>
+        <li v-if="rightContextData.showTransferToFriendButton" @click="transpondToFriend">发朋友圈</li>
       </ul>
     </div>
-
     <el-dialog title="查看图片" :visible.sync="showImg" center @close="closeImgDialog">
       <div class="showImgBox">
         <p v-if="imgTips">{{imgLoading}}</p>
@@ -412,7 +406,8 @@ export default {
       rightContextData: {
         showCopyButton: true,
         showTransferButton: true,
-        showWithdrawButton: true
+        showWithdrawButton: true,
+        showTransferToFriendButton: true
       },
       showImgSrc:'',
       showImg:false,
@@ -797,6 +792,8 @@ export default {
          this.rightContextData.showWithdrawButton = parseInt(item.senderFlag) === 1  // 文本消息
          this.rightContextData.showCopyButton = parseInt(item.type) === 1       // 文本消息
         // this.rightContextData.showTransferButton = parseInt(item.type) === 49  //文章转发
+        this.rightContextData.showTransferToFriendButton = (parseInt(item.type) === 49 || parseInt(item.type) === 490 || parseInt(item.type) === 491 || parseInt(item.type) === 492)  //转发
+
         this.showFeature = true
         this.resetRect(e, item)
       }
@@ -830,6 +827,16 @@ export default {
     // 转发
     transpond () {
       this.$showPopOperating('Transpond', {
+        propsData: this.withdrawMessageArr,
+        closeFun: () => {
+          this.$hidePopOperating()
+        }
+      })
+    },
+
+    transpondToFriend(){
+	    console.log(this.withdrawMessageArr)
+      this.$showPopOperating('TranspondToFriend', {
         propsData: this.withdrawMessageArr,
         closeFun: () => {
           this.$hidePopOperating()
@@ -1215,13 +1222,10 @@ export default {
 
       this.$http.post('/api/im/chatroom/findChatRoomMember.do', {
         chatRoomName: info.chatRoomName,
-        //roomCode: info.roomCode
+        roomCode: info.roomCode
       }).then(res => {
         if (res.data.result) {
-          let data = res.data.returnObject
-          if(data){
-            this.groupMemberNum = data.length
-          }
+          if(res.data.returnObject) this.groupMemberNum = res.data.returnObject.length
         }
       })
     }
@@ -1660,7 +1664,7 @@ export default {
   border: 1px solid #c7c7c7;
   box-sizing: border-box;
   z-index: 999;
-  width: 66px;
+  /*width: 66px;*/
 
   ul li {
     padding: 10px 18px;

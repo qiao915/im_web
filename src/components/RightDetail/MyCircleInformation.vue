@@ -506,10 +506,11 @@ export default {
       },
 
       goBack(){
-        let params = this.$route.params;
+        this.$router.go(-1)
+       /* let params = this.$route.params;
         this.$router.push({
           path: `/im-web/app/${params.wxId}/dynamic/friends/${this.nowSelectInfo.noWx}`
-        });
+        });*/
         // Bus.$emit('changeLeftList')
         // this.$store.dispatch('is_circleFriendsList',1)
       },

@@ -744,9 +744,8 @@ export default {
           console.log('error submit!!');
           return false;
         }
-      });
+      })
     },
-
 
     beforeAvatarUpload (file) {
       let fileName = new Array(0)

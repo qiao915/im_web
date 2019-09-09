@@ -247,6 +247,7 @@ Vue.prototype.$showPopOperating = function (name, {
   })
 }
 
+//置空
 Vue.prototype.$hidePopOperating = function () {
   this.$store.dispatch('showPopOperating', {
     name: '',

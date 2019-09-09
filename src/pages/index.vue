@@ -7,7 +7,6 @@
       <span  v-if="hide_leftBar">
         <LeftBar></LeftBar>
       </span>
-
       <AccountDetail v-if="showRightContent" ></AccountDetail>
       <RightContent v-if="showRightContent" ></RightContent>
     </div>
@@ -52,6 +51,7 @@ export default {
     EditGroup: () => import('@/components/CreatGroup/EditGroup'), //编辑客户分组
     EditTags: () => import('@/components/CreatGroup/EditTags'), //编辑客户标签
     Transpond: () => import('@/components/CreatGroup/Transpond'), //转发
+    TranspondToFriend: () => import('@/components/CreatGroup/TranspondToFriend'), //转发朋友圈
 
     //以下是功能大全
     Trusteeship: () => import('@/components/RightInfo/Trusteeship'),  //托管
