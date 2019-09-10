@@ -243,7 +243,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .propBox {
   width: 640px;
   height: 500px;
