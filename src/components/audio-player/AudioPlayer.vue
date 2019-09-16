@@ -5,7 +5,6 @@
 import AudioWeixin from './audio-like-weixin.vue'
 import { audioConvert } from '@/api'
 import { createUploadUrl } from '@/tools/resourceTool'
-
 export default {
   components: {
     AudioWeixin

@@ -4,7 +4,7 @@
       <span :class="{'active':itemActive == 1}" @click="itemActiveFn(1)">客户资料</span>
       <span :class="{'active':itemActive == 2}" @click="itemActiveFn(2)">通话记录</span>
     </div>
-    <div v-show="itemActive == 1">
+    <div class="main" v-show="itemActive == 1">
       <div class="userInfo">
         <ul class="userInfo_ul">
           <li>
@@ -113,21 +113,103 @@
         </div>
       </div>
     </div>
-    <div v-show="itemActive == 2" class="audioList">
+    <div class="main audioList" v-show="itemActive == 2">
       <div class="block">
         <el-date-picker
-          size="mini"
           :picker-options="pickerOptions"
           align="right"
           end-placeholder="结束日期"
           range-separator="至"
+          size="mini"
           start-placeholder="开始日期"
           type="daterange"
           unlink-panels
           v-model="selectData">
         </el-date-picker>
+        <el-button class="searchBtn" size="mini" type="success">搜索</el-button>
       </div>
-
+      <div class="timeline">
+        <div v-for="item in 6">
+          <span class="time">2019/9/16</span>
+          <el-timeline>
+            <el-timeline-item
+              color="#ff7c7c"
+              icon="el-icon-s-help">
+              <div class="itemConten">
+                <p class="time">
+                  <el-popover
+                    placement="top-start"
+                    trigger="hover"
+                    width="200">
+                    <div class="popoverContent">
+                      <span>客户电话：18123954667</span>
+                      <span>本机号码：19928789776</span>
+                    </div>
+                    <i class="el-icon-phone-outline cursorP" slot="reference"></i>
+                  </el-popover>
+                  22:30
+                </p>
+                <div class="audioBox">
+                  <div class="audioContent">
+                    <audio-weixin :audio-src='audioSrc' ></audio-weixin>
+                    <!--                    <audio src="http://192.168.0.188:8000/audio.mp3"></audio>-->
+                  </div>
+                </div>
+              </div>
+            </el-timeline-item>
+            <el-timeline-item
+              color="#ff7c7c"
+              icon="el-icon-s-help">
+              <div class="itemConten">
+                <p class="time">
+                  <el-popover
+                    placement="top-start"
+                    trigger="hover"
+                    width="200">
+                    <div class="popoverContent">
+                      <span>客户电话：18123954667</span>
+                      <span>本机号码：19928789776</span>
+                    </div>
+                    <i class="el-icon-phone-outline cursorP" slot="reference"></i>
+                  </el-popover>
+                  21:40
+                </p>
+                <div class="audioBox">
+                  <div class="audioContent">
+                    <audio-weixin :audio-src='audioSrc' ></audio-weixin>
+<!--                    <audio src="http://192.168.0.188:8000/audio.mp3"></audio>-->
+                  </div>
+                </div>
+              </div>
+            </el-timeline-item>
+            <el-timeline-item
+              color="#ff7c7c"
+              icon="el-icon-s-help">
+              <div class="itemConten">
+                <p class="time">
+                  <el-popover
+                    placement="top-start"
+                    trigger="hover"
+                    width="200">
+                    <div class="popoverContent">
+                      <span>客户电话：18123954667</span>
+                      <span>本机号码：19928789776</span>
+                    </div>
+                    <i class="el-icon-phone-outline cursorP" slot="reference"></i>
+                  </el-popover>
+                  20:46
+                </p>
+                <div class="audioBox">
+                  <div class="audioContent">
+                    <audio-weixin :audio-src='audioSrc' ></audio-weixin>
+                    <!--                    <audio src="http://192.168.0.188:8000/audio.mp3"></audio>-->
+                  </div>
+                </div>
+              </div>
+            </el-timeline-item>
+          </el-timeline>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -137,10 +219,12 @@
   import {chatWindowType} from '@/components/Chat/chatWindowType'
   import {findPersonMember} from '@/api'
   import Bus from '../Data/bus.js'
-
+  import AudioWeixin from '@/components/audio-player/audio-like-weixin.vue'
   export default {
     name: 'UserDetail',
-
+    components: {
+      AudioWeixin
+    },
     props: {
       type: {
         type: Number,
@@ -161,6 +245,7 @@
 
     data() {
       return {
+        audioSrc:"http://192.168.0.188:8000/audio.mp3",
         showEdit: true,
         historyPersonMember: {},
         switchValue1: false,
@@ -561,7 +646,9 @@
     height: 100%;
     padding: 0 0 0 10px;
     box-sizing: border-box;
-    overflow: auto;
+    /*overflow: auto;*/
+    display: flex;
+    flex-direction: column;
 
     .userBox {
       width: 100%;
@@ -588,11 +675,92 @@
         color: #08A406
       }
     }
-    .audioList /deep/ .el-date-editor .el-range-input{
 
+    .main {
+      flex: 1;
     }
 
+    /*.audioList /deep/ .el-date-editor{
+      width: 100%;
+    }*/
 
+    .audioList {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+
+      .block {
+        width: 100%;
+        display: flex;
+
+        /deep/ .el-date-editor {
+          .el-input__icon {
+            width: 16px;
+          }
+
+          .el-range-separator {
+            width: 11%;
+          }
+
+          .el-range-input {
+            width: 40%;
+          }
+        }
+
+        .searchBtn {
+          margin: 0 5px;
+        }
+      }
+
+      .timeline {
+        flex: 1;
+        margin-top: 10px;
+        padding-right: 10px;
+        box-sizing: border-box;
+        /*height: 100%;*/
+        overflow-x: visible;
+        overflow-y: auto;
+
+        .time {
+          display: block;
+          margin-bottom: 10px;
+          font-size: 15px;
+        }
+        .audioBox{
+          display: flex;
+          align-items: center;
+          .audioContent{
+            width: 60%;
+            height: 30px;
+            background: white;
+            margin-right: 5px;
+            /*border: 1px solid #ebeef5;*/
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+            border-radius: 5px;
+          }
+        }
+        .el-icon-phone-outline{
+          font-size: 18px;
+          color: #08A406;
+        }
+        /deep/ .el-card__body {
+          padding: 5px;
+        }
+
+        /deep/ .el-timeline-item__tail {
+          border-left-color: #ff7c7c;
+          border-left-style: dashed;
+          border-left-width: 1px;
+          left: 6px;
+        }
+
+        /deep/ .el-timeline-item__node--normal {
+          left: 0;
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
 
     .userInfo_ul {
       .gender {

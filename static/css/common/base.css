@@ -12,6 +12,9 @@
   visibility: hidden;
   display: block;
 }
+.cursorP {
+  cursor: pointer;
+}
 .cor-po{cursor: pointer;}
 .fl-r{float: right;}
 .fl-l{float: left;}

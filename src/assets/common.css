@@ -1,4 +1,11 @@
 /* 修改element-ui 框架样式 */
+.el-popover--plain{
+  padding: 8px 8px;
+}
+.popoverContent{
+  display: flex;
+  flex-direction: column;
+}
 .el-tabs__item.is-top{color: #fff;}
 .el-dialog__header{padding: 10px 20px;background: #545c64;}
 .tableBox_top .keywords .el-tabs__content{width: 950px;height: 660px;overflow: auto;}

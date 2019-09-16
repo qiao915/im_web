@@ -62,7 +62,7 @@
 
 <script>
 import dateStr from '@/utils/date_string_utils.js'
-
+import bus from '@/components/Data/bus.js'
 const vueComponent = {
   props: {
     audioSrc: {
@@ -95,6 +95,9 @@ const vueComponent = {
   components: {},
   // 执行的方法
   methods: {
+    stopAudio(){
+
+    },
     // 初始化变量
     initVal () {
       var self = this
@@ -113,15 +116,16 @@ const vueComponent = {
 
     // 播放或者暂停
     playOrStop () {
+      bus.$emit('stopAudio')
       var self = this
       var audio = self.audio
 
-      if (audio.paused) {
+      // if (audio.paused) {
         // 如果暂停了
         audio.play()
-      } else {
-        audio.pause()
-      }
+      // } else {
+      //   audio.pause()
+      // }
     },
 
     // audio 添加监听事件
@@ -239,8 +243,13 @@ const vueComponent = {
 
   // 渲染的时候执行
   mounted: function () {
-    var self = this
+    bus.$on('stopAudio',()=>{
+      var audio = this.audio
+      audio.load()
+      this.isPlay =  false
 
+    })
+    var self = this
     // dom渲染成功后
     self.$nextTick(function () {
       // 初始化变量
