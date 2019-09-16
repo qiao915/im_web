@@ -4,7 +4,8 @@
       <div class="wrap_box">
         <div class="wrap_head">
           <span>
-            <img class="wrap_head_img" :src="dynamicArr.headImg">
+            <img v-show="dynamicArr.headImg" class="wrap_head_img" :src="dynamicArr.headImg">
+            <img v-show="!dynamicArr.headImg" class="wrap_head_img" src="../../../static/img/default-head.png">
             <!-- <img @click="checkedFriendsCircle()" class="wrap_head_img" :src="item.headImg" title="查看朋友圈"> -->
             <span class="wrap_head_name">
               <span class="blue_text">{{dynamicArr.nickname}}</span>

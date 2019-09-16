@@ -17,7 +17,8 @@
             <div v-for='(item, index) in Friendsdynamic' :key="index" class="dynamicBox">
               <div class="wrap_head">
                 <span>
-                  <img @click="checkedFriendsCircle(item)" class="wrap_head_img" :src="item.headImg" title="查看朋友圈111">
+                  <img v-show="item.headImg" @click="checkedFriendsCircle(item)" class="wrap_head_img" :src="item.headImg">
+                  <img v-show="!item.headImg" @click="checkedFriendsCircle(item)" class="wrap_head_img" src="../../../static/img/default-head.png">
                   <span class="wrap_head_name">
                     <span class="blue_text">{{item.memberName}}</span>
                     <span class="time">{{item.createDate}}</span>

@@ -6,7 +6,8 @@
         <div v-for="(item, index) in Friendsdynamic" :key="index" class="dynamicBox">
           <div class="wrap_head">
             <span>
-              <img class="wrap_head_img" :src="item.headImg || default_img" alt="">
+              <img v-show="item.headImg" class="wrap_head_img" :src="item.headImg" alt="">
+              <img v-show="!item.headImg" class="wrap_head_img" src="../../../static/img/default-head.png" alt="">
               <span class="wrap_head_name">
                 <span class="blue_text">{{item.memberName}}</span>
                 <span class="time">{{item.createDate}}</span>
