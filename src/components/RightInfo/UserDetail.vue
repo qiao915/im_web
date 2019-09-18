@@ -124,17 +124,19 @@
           start-placeholder="开始日期"
           type="daterange"
           unlink-panels
-          v-model="selectData">
+          v-model="selectData"
+          value-format="timestamp">
         </el-date-picker>
-        <el-button class="searchBtn" size="mini" type="success">搜索</el-button>
+        <el-button @click="searchFn" class="searchBtn" size="mini" type="success">搜索</el-button>
       </div>
-      <div class="timeline">
-        <div v-for="item in 6">
-          <span class="time">2019/9/16</span>
+      <div class="timeline" id="pullUpbbbb" v-show="audioArr.length">
+        <div v-for="item of audioArr">
+          <span class="time">{{item[0].date | wq_capitalize("yyyy年MM月dd日")}}</span>
           <el-timeline>
             <el-timeline-item
               color="#ff7c7c"
-              icon="el-icon-s-help">
+              icon="el-icon-s-help"
+              v-for="value of item">
               <div class="itemConten">
                 <p class="time">
                   <el-popover
@@ -142,72 +144,26 @@
                     trigger="hover"
                     width="200">
                     <div class="popoverContent">
-                      <span>客户电话：18123954667</span>
-                      <span>本机号码：19928789776</span>
+                      <span>客户电话：{{value.phoneNum}}</span>
+                      <span>本机号码：{{value.localPhoneNum}}</span>
                     </div>
                     <i class="el-icon-phone-outline cursorP" slot="reference"></i>
                   </el-popover>
-                  22:30
+                  {{value.date | wq_capitalize("hh:mm")}}
                 </p>
                 <div class="audioBox">
                   <div class="audioContent">
-                    <audio-weixin :audio-src='audioSrc' ></audio-weixin>
-                    <!--                    <audio src="http://192.168.0.188:8000/audio.mp3"></audio>-->
-                  </div>
-                </div>
-              </div>
-            </el-timeline-item>
-            <el-timeline-item
-              color="#ff7c7c"
-              icon="el-icon-s-help">
-              <div class="itemConten">
-                <p class="time">
-                  <el-popover
-                    placement="top-start"
-                    trigger="hover"
-                    width="200">
-                    <div class="popoverContent">
-                      <span>客户电话：18123954667</span>
-                      <span>本机号码：19928789776</span>
-                    </div>
-                    <i class="el-icon-phone-outline cursorP" slot="reference"></i>
-                  </el-popover>
-                  21:40
-                </p>
-                <div class="audioBox">
-                  <div class="audioContent">
-                    <audio-weixin :audio-src='audioSrc' ></audio-weixin>
-<!--                    <audio src="http://192.168.0.188:8000/audio.mp3"></audio>-->
-                  </div>
-                </div>
-              </div>
-            </el-timeline-item>
-            <el-timeline-item
-              color="#ff7c7c"
-              icon="el-icon-s-help">
-              <div class="itemConten">
-                <p class="time">
-                  <el-popover
-                    placement="top-start"
-                    trigger="hover"
-                    width="200">
-                    <div class="popoverContent">
-                      <span>客户电话：18123954667</span>
-                      <span>本机号码：19928789776</span>
-                    </div>
-                    <i class="el-icon-phone-outline cursorP" slot="reference"></i>
-                  </el-popover>
-                  20:46
-                </p>
-                <div class="audioBox">
-                  <div class="audioContent">
-                    <audio-weixin :audio-src='audioSrc' ></audio-weixin>
-                    <!--                    <audio src="http://192.168.0.188:8000/audio.mp3"></audio>-->
+                    <audio-weixin :audio-src='audioSrcFn(value.resource)'></audio-weixin>
                   </div>
                 </div>
               </div>
             </el-timeline-item>
           </el-timeline>
+        </div>
+      </div>
+      <div class="timeline" v-show="!audioArr.length">
+        <div class="noData">
+          暂无数据~
         </div>
       </div>
     </div>
@@ -219,11 +175,39 @@
   import {chatWindowType} from '@/components/Chat/chatWindowType'
   import {findPersonMember} from '@/api'
   import Bus from '../Data/bus.js'
-  import AudioWeixin from '@/components/audio-player/audio-like-weixin.vue'
+  import AudioWeixin from '@/components/audio-player/AudioPlayer.vue'
+  import {createUploadUrl} from '@/tools/resourceTool'
+
   export default {
     name: 'UserDetail',
     components: {
       AudioWeixin
+    },
+    filters: {
+
+      /**
+       * 日期格式化
+       * @param {String | Number} value  转换数据
+       * @param {String} f  需要转换的格式 'yyyy-MM-dd hh:mm'
+       *  **/
+
+      wq_capitalize: (value, f) => {
+        if (!value) return false;
+        var elem = new Date(parseInt(value));
+        var o = {
+          "M+": elem.getMonth() + 1,
+          "d+": elem.getDate(),
+          "h+": elem.getHours(),
+          "m+": elem.getMinutes(),
+          "s+": elem.getSeconds(),
+          "q+": Math.floor((elem.getMonth() + 3) / 3),
+          "S": elem.getMilliseconds()
+        };
+        if (/(y+)/.test(f)) f = f.replace(RegExp.$1, (elem.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+          if (new RegExp("(" + k + ")").test(f)) f = f.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        return f
+      }
     },
     props: {
       type: {
@@ -237,7 +221,7 @@
           return {
             chatRoomFlag: false,
             code: '',
-            memberNoGm: '',
+            memberNoGm: ''
           }
         }
       }
@@ -245,7 +229,9 @@
 
     data() {
       return {
-        audioSrc:"http://192.168.0.188:8000/audio.mp3",
+        start: 0,
+        limit: 15,
+        audioArr: [],
         showEdit: true,
         historyPersonMember: {},
         switchValue1: false,
@@ -256,7 +242,7 @@
         changeCycle: 30,
         showEditCycle: true,
         itemActive: 1,
-        selectData: "",
+        selectData: [],
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -289,6 +275,7 @@
 
     computed: {
       ...mapGetters([
+        'userInfo',
         'currentPersonMemberDetail',
         'currentPersonMember'
       ]),
@@ -313,46 +300,96 @@
     },
     watch: {
       $route() {
-        this.checkIsstickTop()
-        this.getmemberDetail()
+        this.checkIsstickTop();
+        this.getmemberDetail();
+        this.itemActive = 1;
+        this.audioArr = [];
+        this.selectData = []
       }
 
     },
     mounted() {
-      // console.log(this.$cfg)
+      $('#pullUpbbbb').MHPullUp({
+        success: (obj) => {
+          this.start += 15;
+          this.findAudioListFn(data => {
+            this.audioArr = this.audioArr.concat(this.listFn(data.rows));
+            if (data.total <= this.audioArr.length) {
+              obj.flag = false;
+            } else {
+              obj.flag = true;
+            }
+          })
+        }
+      });
       Bus.$on('refreshUserInfo', (e) => {
-        this.getmemberDetail()
-      })
-      this.getmemberDetail()
+        this.getmemberDetail();
+      });
+      this.getmemberDetail();
       this.checkIsstickTop()
     },
     async created() {
-      let params = this.$route.params
+      let params = this.$route.params;
 
       if (this.type === chatWindowType.history) {
-        this.showEdit = true
+        this.showEdit = true;
         let ret = await findPersonMember(this.$http, {
           code: params.code,
           memberNo: params.memberNo,
           memberNoGm: params.memberNoGm
-        })
+        });
 
         this.historyPersonMember = ret
       }
 
     },
-
     methods: {
+      audioSrcFn(data) {
+        if (data)
+          return createUploadUrl(data, this.userInfo.uploadUrl);
+        else
+          return ""
+      },
+      getYMD(date) {
+        var elem = new Date(parseInt(date));
+        var str = elem.getFullYear() + "/" + (elem.getMonth() + 1) + "/" + elem.getDate();
+        return str
+      },
+      listFn(arr) {
+        var data = '', list = [], itemArr = [], num = 0;
+        for (let item of arr) {
+          num++;
+          if (data != this.getYMD(item.date)) {
+            if (itemArr.length) list.push(itemArr);
+            data = this.getYMD(item.date);
+            itemArr = [];
+            itemArr.push(item)
+          } else {
+            itemArr.push(item);
+            if (num == arr.length) list.push(itemArr);
+          }
+        }
+        return list;
+      },
+      searchFn() {
+        this.start = 0;
+        this.findAudioListFn(data => {
+          this.audioArr = this.listFn(data.rows)
+        });
+      },
       itemActiveFn(n) {
         if (n != this.itemActive) this.itemActive = n;
+        if (n == 2 && !this.audioArr.length) this.findAudioListFn(data => {
+          this.audioArr = this.listFn(data.rows)
+        });
       },
       ...mapActions(['editNickName']),
 
       // 修改昵称
       editMemberNickName() {
         // console.log(this.personMemberDetail)
-        this.showEdit = false
-        this.nickName ? this.changeName = this.nickName : this.changeName = this.personMemberDetail.memberName
+        this.showEdit = false;
+        this.nickName ? this.changeName = this.nickName : this.changeName = this.personMemberDetail.memberName;
 
         this.$nextTick(() => {
           this.$refs.changeInput.focus()
@@ -365,26 +402,26 @@
           this.$message({
             type: 'error',
             message: '客户昵称不能为空'
-          })
-          this.showEdit = true
+          });
+          this.showEdit = true;
           //  this.$refs.changeInput.focus()
           return false
         }
         if (this.changeName === this.nickName) {
-          this.showEdit = true
+          this.showEdit = true;
           return false
         }
 
         let res = await this.editNickName({
           code: this.personMemberDetail.code,
           nickName: this.changeName
-        })
+        });
 
         if (res.data.result) {
           this.$message({
             type: 'success',
             message: '修改成功'
-          })
+          });
           this.personMemberDetail.nickNameRemarkWx = this.changeName
         } else {
           this.$message({
@@ -398,13 +435,11 @@
 
       //修改手机号
       editMobile() {
-        this.showEditMobile = false
-        this.changeMobile = this.personMemberDetail.mobile
-
+        this.showEditMobile = false;
+        this.changeMobile = this.personMemberDetail.mobile;
         this.$nextTick(() => {
           this.$refs.changeInput_changeMobile.focus()
         })
-        console.log(this.personMemberDetail)
       },
 
       blurInput_editMobile() {
@@ -412,13 +447,13 @@
           this.$message({
             type: 'error',
             message: '手机号不能为空'
-          })
-          this.showEditMobile = true
+          });
+          this.showEditMobile = true;
           return false
         }
 
         if (this.changeMobile === this.personMemberDetail.mobile) {
-          this.showEditMobile = true
+          this.showEditMobile = true;
           return false
         }
 
@@ -427,13 +462,13 @@
           memberNoGm: this.personMemberDetail.memberNoGm,
           noWxGm: this.$cfg.nowSelectInfo.noWx,
           mobile: this.changeMobile
-        }
+        };
         this.$http.post('/api/member/updateMember.do', params).then(res => {
           if (res.data.result) {
             this.$message({
               type: 'success',
               message: '修改成功'
-            })
+            });
             this.personMemberDetail.mobile = this.changeMobile
           } else {
             this.$message({
@@ -446,11 +481,26 @@
         })
       },
 
+      findAudioListFn(callBack) {
+        let params = {
+          start: this.start,
+          limit: this.limit
+        };
+        if (this.selectData[0]) params['startDate'] = this.selectData[0];
+        if (this.selectData[1]) params['endDate'] = this.selectData[1];
+        this.$http.post('/api/shopTerminalAudio/list.do', params).then(res => {
+          if (res.data.result) {
+            callBack(res.data.returnObject)
+          } else {
+
+          }
+        })
+      },
 
       //修改补充资料remark
       editRemark() {
-        this.showEditRemark = false
-        this.changeRemark = this.personMemberDetail.remark
+        this.showEditRemark = false;
+        this.changeRemark = this.personMemberDetail.remark;
 
         this.$nextTick(() => {
           this.$refs.changeInput_changeRemark.focus()
@@ -462,13 +512,13 @@
           this.$message({
             type: 'error',
             message: '补充资料不能为空'
-          })
-          this.showEditRemark = true
+          });
+          this.showEditRemark = true;
           return false
         }
 
         if (this.changeRemark === this.personMemberDetail.remark) {
-          this.showEditRemark = true
+          this.showEditRemark = true;
           return false
         }
 
@@ -477,13 +527,13 @@
           memberNoGm: this.personMemberDetail.memberNoGm,
           noWxGm: this.$cfg.nowSelectInfo.noWx,
           remark: this.changeRemark
-        }
+        };
         this.$http.post('/api/member/updateMember.do', params).then(res => {
           if (res.data.result) {
             this.$message({
               type: 'success',
               message: '修改成功'
-            })
+            });
             this.personMemberDetail.remark = this.changeRemark
           } else {
             this.$message({
@@ -492,25 +542,23 @@
             })
           }
           this.showEditRemark = true
-
         })
       },
 
       //朋友圈提醒周期
       editCycle() {
-        this.showEditCycle = false
-        this.changeCycle = this.personMemberDetail.cycle
-
+        this.showEditCycle = false;
+        this.changeCycle = this.personMemberDetail.cycle;
         this.$nextTick(() => {
           this.$refs.changeInput_changeCycle.focus()
         })
       },
 
       blurInput_editCycle() {
-        let boolean = new RegExp("^[1-9][0-9]*$").test(this.changeCycle)
+        let boolean = new RegExp("^[1-9][0-9]*$").test(this.changeCycle);
         if (!boolean) {
-          this.$message.error("请输入正整数")
-          this.changeCycle = ''
+          this.$message.error("请输入正整数");
+          this.changeCycle = '';
           return false
         }
 
@@ -518,13 +566,13 @@
           this.$message({
             type: 'error',
             message: '朋友圈提醒周期不能为空'
-          })
-          this.showEditCycle = true
+          });
+          this.showEditCycle = true;
           return false
         }
 
         if (this.changeCycle === this.personMemberDetail.cycle) {
-          this.showEditCycle = true
+          this.showEditCycle = true;
           return false
         }
 
@@ -533,14 +581,14 @@
           // memberNoGm: this.personMemberDetail.memberNoGm,
           // noWxGm: this.$cfg.nowSelectInfo.noWx,
           cycle: this.changeCycle
-        }
+        };
 
         this.$http.post('/api/imh5/member/updateFriendPointCycle.do', params).then(res => {
           if (res.data.result) {
             this.$message({
               type: 'success',
               message: '修改成功'
-            })
+            });
             this.personMemberDetail.cycle = this.changeCycle
           } else {
             this.$message({
@@ -553,7 +601,6 @@
         })
       },
 
-
       //置顶
       stickTop() {
         let params = {
@@ -561,11 +608,11 @@
           setType: this.switchValue1,
           memberNo: this.$route.params.memberNo,
           roomCode: '',
-        }
+        };
         this.$http.post('/api/im/contacts/setUpUser.do', params)
           .then(res => {
             if (res.data.result) {
-              this.$message.success('操作成功')
+              this.$message.success('操作成功');
               Bus.$emit('refreshMessageList')
             } else {
               this.$message.error(res.data.errorMessage)
@@ -578,7 +625,7 @@
         let params = {
           memberNo: this.$route.params.memberNo,
           roomCode: ''
-        }
+        };
         this.$http.post('/api/im/contacts/selectSetUp.do', params)
           .then(res => {
             if (res.data.result) {
@@ -599,8 +646,8 @@
 
       //获取客户详细信息
       getmemberDetail() {
-        let params = this.$route.params
-        let isGroupChat = params.hasOwnProperty('roomCode')//是否是群聊或群组
+        let params = this.$route.params;
+        let isGroupChat = params.hasOwnProperty('roomCode');//是否是群聊或群组
 
         if (!isGroupChat) {
           this.$http.post('/api/imh5/index/findPersonMember.do', {
@@ -610,7 +657,6 @@
           }).then(res => {
             if (res.data.result) {
               this.$store.commit('SET_CURRENT_PERSON_MEMBER_DETAIL', res.data.returnObject);
-              // console.log(res)
             }
           })
         }
@@ -641,6 +687,9 @@
 </script>
 
 <style lang="less" scoped>
+  /* /deep/ .el-timeline .el-timeline-item:last-child .el-timeline-item__tail{
+     display: block;
+   }*/
   .userDetailBox {
     width: 100%;
     height: 100%;
@@ -721,28 +770,38 @@
         overflow-x: visible;
         overflow-y: auto;
 
+        .noData {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
         .time {
           display: block;
           margin-bottom: 10px;
           font-size: 15px;
         }
-        .audioBox{
+
+        .audioBox {
           display: flex;
           align-items: center;
-          .audioContent{
+
+          .audioContent {
             width: 60%;
             height: 30px;
             background: white;
             margin-right: 5px;
             /*border: 1px solid #ebeef5;*/
-            box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
             border-radius: 5px;
           }
         }
-        .el-icon-phone-outline{
+
+        .el-icon-phone-outline {
           font-size: 18px;
           color: #08A406;
         }
+
         /deep/ .el-card__body {
           padding: 5px;
         }

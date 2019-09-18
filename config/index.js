@@ -24,7 +24,8 @@ module.exports = {
 		assetsPublicPath: '/',
 		proxyTable: {
 			'/api': {
-				target: 'http://192.168.0.3/api/', // 接口的域名
+				// target: 'http://192.168.0.3/api/', // 接口的域名
+				target: 'http://192.168.1.7/api/', // 接口的域名
 				// target: 'http://oms.clickalign.com/api/', // 接口的域名
 				// target: 'http://juke-test.kuick.cn/api/', // 本地接口/
 				// secure: false,

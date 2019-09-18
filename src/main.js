@@ -16,6 +16,7 @@ import qrcode from 'qrcode'
 import VueClipboard from 'vue-clipboard2'
 import params from './tools/params'
 import $ from 'jquery'
+import jQuery from 'jquery'
 import Utils from './method'
 import Eumn from './Eumn/Enum.js'
 import cfg from './cfg.js'
@@ -26,9 +27,9 @@ import '..//static/css/common/common.css'
 import '..//static/css/common/base.css'
 
 import md5 from 'js-md5'
-
 // 无限滚动
 import vueiInfinite from 'vue-infinite-scroll'
+
 Vue.use(vueiInfinite)
 
 Vue.prototype.Enum = Vue.prototype.$Enum = Eumn // 在模板中使用定义枚举
@@ -269,5 +270,42 @@ let app = new Vue({
   store: stores,
   render: h => h(App)
 })
+;(function ($) {
+  var defaults = {
+    text: '正在加载···',
+    success: function () {
+    },
+    limitTop: 30
+  };
+  var PullUp = function (elem, options) {
+    this.flag = true;
+    this.init(elem, options);
+  };
+  PullUp.prototype = {
+    init(elem, options) {
+      this.scroll(elem, options);
+    },
+    scroll(elem, options) { // 滚动事件监听
+      var self = this;
+      !options.prohibitBackTop ? elem.scrollTop(0) : '';
+      elem.off('scroll');
+      elem.on('scroll', () => {
+        var dH = elem[0].scrollHeight; // 滚动区域的高度
+        var sT = elem.scrollTop(); // 滚动高度
+        var wH = document.documentElement.clientHeight; // 是土矿口的高度
+        if (dH - sT - wH <= options.limitTop && self.flag && elem.scrollTop() != 0) {
+          self.flag = false;
+          options.success(self);
+        }
+      });
+    }
+  };
+  $.fn.MHPullUp = function (options) {
+    new PullUp(this, $.extend({}, defaults, options));
+  }
+})(jQuery);
+
+
+
 
 window.app = app
