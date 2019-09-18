@@ -23,6 +23,10 @@ export default {
       type: Number,
       default: 1
     },
+    audioType:{
+      type: String,
+      default: ""
+    }
 
   },
 

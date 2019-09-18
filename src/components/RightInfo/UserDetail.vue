@@ -153,7 +153,7 @@
                 </p>
                 <div class="audioBox">
                   <div class="audioContent">
-                    <audio-weixin :audio-src='audioSrcFn(value.resource)'></audio-weixin>
+                    <audio-weixin :audio-src='audioSrcFn(value.resource)' :audio-type="'audioList'"></audio-weixin>
                   </div>
                 </div>
               </div>
@@ -345,10 +345,11 @@
     },
     methods: {
       audioSrcFn(data) {
-        if (data)
+      /*  if (data)
           return createUploadUrl(data, this.userInfo.uploadUrl);
         else
-          return ""
+          return ""*/
+        return data
       },
       getYMD(date) {
         var elem = new Date(parseInt(date));
@@ -366,8 +367,8 @@
             itemArr.push(item)
           } else {
             itemArr.push(item);
-            if (num == arr.length) list.push(itemArr);
           }
+          if (num == arr.length) list.push(itemArr);
         }
         return list;
       },
